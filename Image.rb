@@ -38,21 +38,17 @@ class Image
     end
     
     sobelFilter = [[1, 2, 1], [0, 0, 0], [-1, -2, -1]]
-    height = @height
-    width = @width
-    heightIndex = 1
+    height = @height-2
+    width = @width-2
     copyImage = ChunkyPNG::Image.from_file(pathForImage)
     sobelX = ChunkyPNG::Image.from_file(pathForImage)
     
-    begin
-      widthIndex = 1
-      begin
-        pixel = calculatePixelValueWithFilter(sobelFilter, copyImage, widthIndex, heightIndex, true)
-        sobelX[widthIndex, heightIndex] = ChunkyPNG::Color.rgb(pixel[0].abs, pixel[0].abs, pixel[0].abs)
-        widthIndex += 1
-      end while widthIndex < (width - 1)
-      heightIndex += 1
-    end while heightIndex < (height - 1)
+    for j in 1..(height)
+      for i in 1..(width)
+        pixel = calculatePixelValueWithFilter(sobelFilter, copyImage, i, j, true)
+        sobelX[i, j] = ChunkyPNG::Color.rgb(pixel[0].abs, pixel[0].abs, pixel[0].abs)
+      end
+    end
     pathForSave.nil? ? sobelX.save(File.join(@picturePath, name)) : sobelX.save(File.join(pathForSave, name))
   end
   
@@ -66,21 +62,17 @@ class Image
     end
     
     sobelFilter = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]]
-    height = @height
-    width = @width
-    heightIndex = 1
+    height = @height-2
+    width = @width-2
     copyImage = ChunkyPNG::Image.from_file(pathForImage)
     sobelY = ChunkyPNG::Image.from_file(pathForImage)
     
-    begin
-      widthIndex = 1
-      begin
-        pixel = calculatePixelValueWithFilter(sobelFilter, copyImage, widthIndex, heightIndex, true)
-        sobelY[widthIndex, heightIndex] = ChunkyPNG::Color.rgb(pixel[0].abs, pixel[0].abs, pixel[0].abs)
-        widthIndex += 1
-      end while widthIndex < (width - 1)
-      heightIndex += 1
-    end while heightIndex < (height - 1)
+    for j in 1..(height)
+      for i in 1..(width)
+        pixel = calculatePixelValueWithFilter(sobelFilter, copyImage, i, j, true)
+        sobelY[i, j] = ChunkyPNG::Color.rgb(pixel[0].abs, pixel[0].abs, pixel[0].abs)
+      end
+    end
     pathForSave.nil? ? sobelY.save(File.join(@picturePath, name)) : sobelY.save(File.join(pathForSave, name))
   end
   
@@ -90,20 +82,15 @@ class Image
     end
     
     blurFilter = [[1, 2, 1], [2, 4, 2], [1, 2, 1]]
-    height = @height
-    width = @width
-    heightIndex = 1
+    height = @height-2
+    width = @width-2
     blur = ChunkyPNG::Image.from_file(File.join(@picturePath, @pictureName))
-
-    begin
-      widthIndex = 1
-      begin
-        pixel = calculatePixelValueWithFilter(blurFilter, @picture, widthIndex, heightIndex, false)
-        blur[widthIndex, heightIndex] = ChunkyPNG::Color.rgb(pixel[0]/16, pixel[1]/16, pixel[2]/16)
-        widthIndex += 1
-      end while widthIndex < (width - 1)
-      heightIndex += 1
-    end while heightIndex < (height - 1)
+    for j in 1..(height)
+      for i in 1..(width)
+        pixel = calculatePixelValueWithFilter(blurFilter, @picture, i, j, false)
+        blur[i, j] = ChunkyPNG::Color.rgb(pixel[0]/16, pixel[1]/16, pixel[2]/16)
+      end
+    end
     pathForSave.nil? ? blur.save(File.join(@picturePath, name)) : blur.save(File.join(pathForSave, name))
   end
   
