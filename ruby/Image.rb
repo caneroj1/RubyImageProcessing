@@ -1,15 +1,29 @@
 require 'chunky_png'
+require_relative 'ImageWindow.rb'
 
 class Image 
   attr_reader :width, :height, :picturePath, :pictureName
   
-  def initialize(path)
-    @picturePath = File.split(path)[0]
-    @pictureName = File.split(path)[1]
+  def initialize(path = nil)
+    if !path.nil? then
+      @picturePath = File.split(path)[0]
+      @pictureName = File.split(path)[1]
     
-    @picture = ChunkyPNG::Image.from_file(path)
-    @width = @picture.dimension.width
-    @height = @picture.dimension.height
+      @picture = ChunkyPNG::Image.from_file(path)
+      @width = @picture.dimension.width
+      @height = @picture.dimension.height
+    end
+  end
+  
+  def displayPicture(pathForImage = nil)
+    if !pathForImage.nil? then
+      pict = Image.new(pathForImage)
+      disp = ImageWindow.new(pict)
+      disp.show
+    else
+      disp = ImageWindow.new(self)
+      disp.show
+    end
   end
   
   def savePicture(name, path = nil)
@@ -26,6 +40,7 @@ class Image
   
   def convertToGrayscale!
     @picture.grayscale!
+    @picture.save(File.join(@picturePath, @pictureName))
   end
   
   def sobelFilter(name = nil, pathForImage = nil, pathForSave = nil)
@@ -130,6 +145,17 @@ class Image
     pathForSave.nil? ? sharpen.save(File.join(@picturePath, name)) : sharpen.save(File.join(pathForSave, name))
   end
   
+  def bezierCurve(name = nil, pathForImage = nil, pathForSave = nil)
+    if name.nil? then
+      name = @pictureName.gsub('.png', 'Bezier.png')
+    end
+    
+    displayPicture(pathForImage)
+    points = parsePoints
+    bez = @picture.bezier_curve(points)
+    pathForSave.nil? ? bez.save(File.join(@picturePath, name)) : bez.save(File.join(pathForSave, name))
+  end
+  
   def calculatePixelValueWithFilter3(filter, img, currX, currY, grayscale)
     value = [0, 0, 0]
     for i in 0..2
@@ -168,6 +194,23 @@ class Image
     array[1] > 255 ? array[1] = 255 : array[1] < 0 ? array[1] = 0 : array[1]
     array[2] > 255 ? array[2] = 255 : array[2] < 0 ? array[2] = 0 : array[2]
     return array
+  end
+  
+  def parsePoints
+    points = Array.new
+    begin
+      file = File.open("../data/data_points.txt", "r") do |f|
+        f.each do |line|
+          arr = line.split(",")
+          points.push(ChunkyPNG::Point.new(arr[0], arr[1]))
+        end
+        f.close
+        File.delete(f)
+      end
+    rescue IOError => e
+      puts "There were no points collected."
+    end
+    return points
   end
   
 end

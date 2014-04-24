@@ -1,5 +1,5 @@
 nameHash = Hash.new()
-processing = ["Grayed.png", "SobelFilter.png", "Blurred.png", "Gauss.png", "Sharpened.png"]
+processing = ["Grayed.png", "SobelFilter.png", "Blurred.png", "Gauss.png", "Sharpened.png", "Bezier.png"]
 
 directory "info"
 file "info/pictures.txt" => "info"
