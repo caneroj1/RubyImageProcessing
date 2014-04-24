@@ -22,11 +22,54 @@
 <p>There are two main ways to create an Image object in RIP:</p>
 <ul>
 <li>With a image path (absolute or relative)</li>
-
+</ul>
 ```ruby
 picture = Image.new(pathToImage)
 ```
-
+<ul>
 <li>Without an image path</li>
 </ul>
+```ruby
+picture = Image.new
+```
 <strong>It is highly recommended to create images with a path! It makes using RIP <em>so</em> much easier.</strong>
+<p>For example, if we create our image with a path specified, parameters to various RIP functions are completely optional.</p>
+```ruby
+picture = Image.new(pathToImage)
+picture.gaussianBlur
+```
+<p>This snippet shows you how to apply gaussian blur to an image. Since we created our image with a path, we do not need to specify the image we are working with, a path to save it, and a name to give the blurred image. RIP will save our blurred image in the same directory as the original image as well as append "Gauss.png" to the name. Cool, right?</p>
+<p>On the other hand, if we create our image without a path, we need to specify the path to the image we are working with, the name we will give the new image, and a path to where we want to save it.</p>
+```ruby
+picture = Image.new
+picture.gaussianBlur("blurred.png", pathToImage, pathToSave)
+```
+<p>This snippet accomplishes the same thing, but requires more work on the user's end.</p>
+<p>We are also working on supporting drawing on images. Right now, the only function implemented is a bezier curve drawing function.</p>
+```ruby
+picture = Image.new(pathToImage)
+picture.bezierCurve
+```
+<p>This snippet will bring up a window displaying the image we are working with. You can click anywhere within the image to mark control points for the curve. Hitting 'Esc' or 'Enter' will close the window and draw the appropriate bezier curve on the image, saving it in the same directory with "Bezier.png" appended to the name.</p>
+<hr>
+<h3>What can RIP do right now?</h3>
+
+| Function | Syntax | Description |
+| --- | --- | --- |
+| Display | `picture.displayPicture` | Brings up a Gosu window displaying the current image. |
+| Save | `picture.savePicture(name)` | Saves the current picture with the given name. Default path is the current image path |
+| Grayscale | `picture.convertToGrayscale` | Converts the current picture into grayscale |
+| Sobel | `picture.sobelFilter` | Applies Sobel Filters to the current picture in order to highlight edges |
+| Blur | `picture.sobelFilter` | Applies a standard blur filter to the current picture. Not as strong as Gaussian Blur |
+| Gaussian Blur | `picture.gaussianBlur` | Applies a Gaussian Blur filter to the current picture |
+| Sharpen | `picture.sharpen` | Applies a filter to sharpen the image in order to highlight color changes |
+| Bezier Curve | `picture.bezierCurve` | Allows the user to draw a bezier curve on the current picture by specifying control points |
+
+<hr>
+<h3>What are we working on?</h3>
+<p>RIP is <em>far</em> from finished, and there is still a lot of work that needs to be done. Right now, there are few things we want to implement.</p>
+<ul>
+<li>Convert all functions to accept hashes for the parameters</li>
+<li>Try and get bezier curve drawing to happen in real time</li>
+<li>Implement more filters</li>
+</ul>
