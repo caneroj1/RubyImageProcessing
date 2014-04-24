@@ -139,7 +139,7 @@ class Image
     blur = ChunkyPNG::Image.from_file(pathForImage)
     for j in 2..(height)
       for i in 2..(width)
-        pixel = calculatePixelValueWithFilter3([[Math.cos(i*pi), Math.cos(i*pi), Math.cos(i*pi)], [Math.sin(i*pi), Math.sin(i*pi), Math.sin(i*pi)], [Math.tan(j*pi), Math.tan(j*pi), Math.tan(j*pi)]], @picture, i, j, false)
+        pixel = calculatePixelValueWithFilter3([[-1*Math.cos(i*pi), -1*Math.cos(i*pi), -1*Math.cos(i*pi)], [-1*Math.sin(j*pi), -1*Math.sin(j*pi), -1*Math.sin(j*pi)], [-1*Math.tan((i/j)*pi), -1*Math.tan((i/j)*pi), -1*Math.tan((i/j)*pi)]], @picture, i, j, false)
         # pixel = calculatePixelValueWithFilter3([[-1, -1, -1], [-1, 8, -1], [Math.tan(j/pi), Math.tan(j/pi), Math.tan(j/pi)]], @picture, i, j, false) # curtains filter
         blur[i, j] = ChunkyPNG::Color.rgb(pixel[0].to_i, pixel[1].to_i, pixel[2].to_i)
       end
