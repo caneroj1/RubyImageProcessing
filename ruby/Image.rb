@@ -121,6 +121,32 @@ class Image
     end
     pathForSave.nil? ? blur.save(File.join(@picturePath, name)) : blur.save(File.join(pathForSave, name))
   end
+
+# new one I'm adding
+  def surveillanceCamera(name = nil, pathForImage = nil, pathForSave = nil)
+    if name.nil? then
+      name = @pictureName.gsub('.png', '1984.png')
+    end
+    
+    if pathForImage.nil? then
+      pathForImage = File.join(@picturePath, @pictureName)
+    end
+
+    pi = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679
+
+    height = @height-3
+    width = @width-3
+    blur = ChunkyPNG::Image.from_file(pathForImage)
+    for j in 2..(height)
+      for i in 2..(width)
+        pixel = calculatePixelValueWithFilter3([[-1*Math.cos(i*pi), -1*Math.cos(i*pi), -1*Math.cos(i*pi)], [-1*Math.sin(j*pi), -1*Math.sin(j*pi), -1*Math.sin(j*pi)], [-1*Math.tan((i/j)*pi), -1*Math.tan((i/j)*pi), -1*Math.tan((i/j)*pi)]], @picture, i, j, false)
+        # pixel = calculatePixelValueWithFilter3([[-1, -1, -1], [-1, 8, -1], [Math.tan(j/pi), Math.tan(j/pi), Math.tan(j/pi)]], @picture, i, j, false) # curtains filter
+        blur[i, j] = ChunkyPNG::Color.rgb(pixel[0].to_i, pixel[1].to_i, pixel[2].to_i)
+      end
+    end
+    pathForSave.nil? ? blur.save(File.join(@picturePath, name)) : blur.save(File.join(pathForSave, name))
+  end
+  # end of new one I'm adding
   
   def sharpen(name = nil, pathForImage = nil, pathForSave = nil)
     if name.nil? then
