@@ -12,10 +12,10 @@ picture.displayPicture("../pictures/LennaGrayed.png")
 # puts "Displaying guassian blur."
 # picture.displayPicture("../pictures/LennaGauss.png")
 
-puts "Applying Burns filter."
+puts "Applying surveillance filter."
 picture.surveillanceCamera
-puts "Displaying Burns filter."
-picture.surveillanceCamera("../pictures/Lenna1984.png")
+puts "Displaying surveillance filter."
+picture.displayPicture("../pictures/Lenna1984.png")
 
 # puts "Applying sharpening filter."
 # picture.sharpen
