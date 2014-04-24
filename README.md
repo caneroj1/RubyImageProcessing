@@ -64,6 +64,7 @@ picture.bezierCurve
 | Gaussian Blur | `picture.gaussianBlur` | Applies a Gaussian Blur filter to the current picture |
 | Sharpen | `picture.sharpen` | Applies a filter to sharpen the image in order to highlight color changes |
 | Bezier Curve | `picture.bezierCurve` | Allows the user to draw a bezier curve on the current picture by specifying control points |
+| 1984 filter | `picture.surveillanceCamera` | Big Brother is watching you. |
 
 <hr>
 <h3>What are we working on?</h3>
