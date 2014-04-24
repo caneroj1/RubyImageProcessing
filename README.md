@@ -16,3 +16,17 @@
 <p>Be sure not include spaces between the files!</p>
 <p>Now, assume that we're done with all of our image processing and we've made a ton of files. We might have "Lenna.png", "LennaGrayed.png", "LennaBlurred.png", "LennaSharpened.png", and so on. If we want to clean up what we've been working on, just call <pre>rake clean</pre></p>
 <p>This will search through the "pictures" subdirectory and remove all of the pictures that have been created off of our baseline images while keeping the images we originally marked.</p>
+<hr>
+<h3>Using RIP</h3>
+<h4>Creating Images</h4>
+<p>There are two main ways to create an Image object in RIP:</p>
+<ul>
+<li>With a image path (absolute or relative)</li>
+
+```ruby
+picture = Image.new(pathToImage)
+```
+
+<li>Without an image path</li>
+</ul>
+<strong>It is highly recommended to create images with a path! It makes using RIP <em>so</em> much easier.</strong>
