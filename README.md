@@ -1,3 +1,8 @@
-I am working on making an image processing library for Ruby. Right now I am able to apply a Sobel filter to pick out horizontal and vertical lines in an image. I will add more to this soon. The code also needs to be cleaned up.
-
-I learned a little about Computer Vision in my Human-Computer Interaction class at TCNJ, which is where I learned about the Sobel filter.
+<h1>Ruby Image Processing</h1>
+<p>This repository contains code for an image processing library written in Ruby. It utilizes two gems:</p>
+<ul>
+  <li><a href="https://rubygems.org/gems/gosu">Gosu</a></li>
+  <li><a href="https://rubygems.org/gems/chunky_png">ChunkyPNG</a></li>
+</ul>
+<p>ChunkyPNG is itself a gem specifically for image processing, but what I am writing is a high level wrapper that implements the functions of ChunkyPNG in such a way as to minimize the amount of code a user must write.</p>
+<p>Gosu is a really awesome graphics gem, and it allows for visualization of images as you are working on them with a simple function call. I've also used Gosu to allow a user the ability to click on an image in order to generate a list of points that can be used for drawing.</p>
