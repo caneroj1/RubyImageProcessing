@@ -15,4 +15,4 @@
 <p>We can also add more than one file at a time, like so: <pre>rake create["Lenna.png","image1.png","image2.png"]</pre></p>
 <p>Be sure not include spaces between the files!</p>
 <p>Now, assume that we're done with all of our image processing, and we've made a ton of files. We might have "Lenna.png", "LennaGrayed.png", "LennaBlurred.png", and so on. If we want to clean up what we've been working on, just call <pre>rake clean</pre></p>
-<p>This will search through the "pictures" subdirectory and remove all of the pictures that have been created off of our baseline images while keeping the iamges we originally marked.</p>
+<p>This will search through the "pictures" subdirectory and remove all of the pictures that have been created off of our baseline images while keeping the images we originally marked.</p>
