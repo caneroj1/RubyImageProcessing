@@ -113,12 +113,17 @@ class Image
     height = @height-3
     width = @width-3
     blur = ChunkyPNG::Image.from_file(pathForImage)
+
+    t1 = Time.now
     for j in 2..(height)
       for i in 2..(width)
-        pixel = calculatePixelValueWithFilter5(blurFilter, @picture, i, j, false)
+        pixel = cpvFilter5Optimize(blurFilter, @picture, i, j, false)
         blur[i, j] = ChunkyPNG::Color.rgb(pixel[0].to_i, pixel[1].to_i, pixel[2].to_i)
       end
     end
+    t2 = Time.now
+    puts (t2 - t1).to_s + " seconds."
+
     pathForSave.nil? ? blur.save(File.join(@picturePath, name)) : blur.save(File.join(pathForSave, name))
   end
 
@@ -199,6 +204,23 @@ class Image
   end
   
   def calculatePixelValueWithFilter5(filter, img, currX, currY, grayscale)
+    value = [0, 0, 0]
+    for i in 0..4
+      for j in 0..4
+        if grayscale then
+          value[0] += filter[i][j] * ChunkyPNG::Color.r(img[(currX-2)+j, (currY-2)+i])
+        else
+          value[0] += filter[i][j] * ChunkyPNG::Color.r(img[(currX-2)+j, (currY-2)+i])
+          value[1] += filter[i][j] * ChunkyPNG::Color.g(img[(currX-2)+j, (currY-2)+i])
+          value[2] += filter[i][j] * ChunkyPNG::Color.b(img[(currX-2)+j, (currY-2)+i])
+        end
+      end
+    end
+    return constrainToColors(value)
+  end
+
+  # attempt at optimization of calculatePixelValueWithFilter5
+  def cpvFilter5Optimize(filter, img, currX, currY, grayscale)
     value = [0, 0, 0]
     for i in 0..4
       for j in 0..4

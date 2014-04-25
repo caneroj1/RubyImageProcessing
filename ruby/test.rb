@@ -7,15 +7,15 @@ puts "Converting to grayscale."
 picture.convertToGrayscale
 puts "Displaying grayscale."
 picture.displayPicture("../pictures/LennaGrayed.png")
-# puts "Applying gaussian blur."
-# picture.gaussianBlur
-# puts "Displaying guassian blur."
-# picture.displayPicture("../pictures/LennaGauss.png")
+puts "Applying gaussian blur."
+picture.gaussianBlur
+puts "Displaying guassian blur."
+picture.displayPicture("../pictures/LennaGauss.png")
 
-puts "Applying surveillance filter."
-picture.surveillanceCamera
-puts "Displaying surveillance filter."
-picture.displayPicture("../pictures/Lenna1984.png")
+# puts "Applying surveillance filter."
+# picture.surveillanceCamera
+# puts "Displaying surveillance filter."
+# picture.displayPicture("../pictures/Lenna1984.png")
 
 # puts "Applying sharpening filter."
 # picture.sharpen
