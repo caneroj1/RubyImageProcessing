@@ -117,14 +117,11 @@ class Image
     t1 = Time.now
     # this section takes approximately 4.2482 seconds. The Lenna image is 220x220 pixels, so:
     # 220^2 = 48400. 4.2482 / 48400 -> each pixel takes approximately 0.0877 milliseconds to be processed.
+
     for j in 2..(height)
       for i in 2..(width)
-        if i % 2 == 0 || j % 2 == 0 then
-          pixel = cpvFilter5Optimize(blurFilter, @picture, i, j, false)
-          blur[i, j] = ChunkyPNG::Color.rgb(pixel[0].to_i, pixel[1].to_i, pixel[2].to_i)
-        else
-          #
-        end
+        pixel = cpvFilter5Optimize(blurFilter, @picture, i, j, false)
+        blur[i, j] = ChunkyPNG::Color.rgb(pixel[0].to_i, pixel[1].to_i, pixel[2].to_i)
       end
     end
 
@@ -229,18 +226,14 @@ class Image
   end
 
   # attempt at optimization of calculatePixelValueWithFilter5
+  # for the time being, let's assume images are never greyscale
   def cpvFilter5Optimize(filter, img, currX, currY, grayscale)
     value = [0, 0, 0]
     for i in 0..4
       for j in 0..4
         value[0] += filter[i][j] * ChunkyPNG::Color.r(img[(currX-2)+j, (currY-2)+i])
-
-        if !grayscale then
-          value[1] += filter[i][j] * ChunkyPNG::Color.g(img[(currX-2)+j, (currY-2)+i])
-          value[2] += filter[i][j] * ChunkyPNG::Color.b(img[(currX-2)+j, (currY-2)+i])
-        else
-
-        end
+        value[1] += filter[i][j] * ChunkyPNG::Color.g(img[(currX-2)+j, (currY-2)+i])
+        value[2] += filter[i][j] * ChunkyPNG::Color.b(img[(currX-2)+j, (currY-2)+i])
       end
     end
     return constrainToColors(value)
