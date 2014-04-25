@@ -115,19 +115,23 @@ class Image
     blur = ChunkyPNG::Image.from_file(pathForImage)
 
     t1 = Time.now
+
     for j in 2..(height)
       for i in 2..(width)
         pixel = cpvFilter5Optimize(blurFilter, @picture, i, j, false)
         blur[i, j] = ChunkyPNG::Color.rgb(pixel[0].to_i, pixel[1].to_i, pixel[2].to_i)
       end
     end
+
     t2 = Time.now
+    "%.9f" % t1.to_f
+    "%.9f" % t2.to_f
     puts (t2 - t1).to_s + " seconds."
 
     pathForSave.nil? ? blur.save(File.join(@picturePath, name)) : blur.save(File.join(pathForSave, name))
   end
 
-# new one I'm adding
+  # 1984 filter
   def surveillanceCamera(name = nil, pathForImage = nil, pathForSave = nil)
     if name.nil? then
       name = @pictureName.gsub('.png', '1984.png')
@@ -151,7 +155,6 @@ class Image
     end
     pathForSave.nil? ? blur.save(File.join(@picturePath, name)) : blur.save(File.join(pathForSave, name))
   end
-  # end of new one I'm adding
   
   def sharpen(name = nil, pathForImage = nil, pathForSave = nil)
     if name.nil? then
@@ -203,6 +206,7 @@ class Image
     return constrainToColors(value)
   end
   
+  # this function takes between 0 and 0.001001 seconds
   def calculatePixelValueWithFilter5(filter, img, currX, currY, grayscale)
     value = [0, 0, 0]
     for i in 0..4
