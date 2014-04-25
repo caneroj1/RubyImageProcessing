@@ -53,6 +53,7 @@ picture.bezierCurve
 <p>This snippet will bring up a window displaying the image we are working with. You can click anywhere within the image to mark control points for the curve. Hitting 'Esc' or 'Enter' will close the window and draw the appropriate bezier curve on the image, saving it in the same directory with "Bezier.png" appended to the name.</p>
 <hr>
 <h3>What can RIP do right now?</h3>
+We have a nice assortment of image processing functions currently. From blurring to applying Sobel filters, we can do some cool things!
 
 | Function | Syntax | Description |
 | --- | --- | --- |
@@ -73,4 +74,10 @@ picture.bezierCurve
 <li>Convert all functions to accept hashes for the parameters</li>
 <li>Try and get bezier curve drawing to happen in real time</li>
 <li>Implement more filters</li>
+</ul>
+<hr>
+<h3>The team!</h3>
+<ul>
+<li><a href="https://github.com/caneroj1">Joe Canero</a></li>
+<li><a href="https://github.com/christj6">Jack Christiansen</a></li>
 </ul>
