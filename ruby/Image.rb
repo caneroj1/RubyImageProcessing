@@ -156,17 +156,16 @@ class Image
     end
 
     pi = Math::PI
-    filter1984 = [
-      [-1*Math.cos(i*pi), -1*Math.cos(i*pi), -1*Math.cos(i*pi)], 
-      [-1*Math.sin(j*pi), -1*Math.sin(j*pi), -1*Math.sin(j*pi)], 
-      [-1*Math.tan((i/j)*pi), -1*Math.tan((i/j)*pi), -1*Math.tan((i/j)*pi)]
-    ]
     height = @height-3
     width = @width-3
     blur = ChunkyPNG::Image.from_file(pathForImage)
     for j in 2..(height)
       for i in 2..(width)
-        pixel = calculatePixelValueWithFilter3(filter1984, @picture, i, j, false)
+        pixel = calculatePixelValueWithFilter3([
+          [-1*Math.cos(i*pi), -1*Math.cos(i*pi), -1*Math.cos(i*pi)], 
+          [-1*Math.sin(j*pi), -1*Math.sin(j*pi), -1*Math.sin(j*pi)], 
+          [-1*Math.tan((i/j)*pi), -1*Math.tan((i/j)*pi), -1*Math.tan((i/j)*pi)]
+          ], @picture, i, j, false)
         # pixel = calculatePixelValueWithFilter3([[-1, -1, -1], [-1, 8, -1], [Math.tan(j/pi), Math.tan(j/pi), Math.tan(j/pi)]], @picture, i, j, false) # curtains filter
         blur[i, j] = ChunkyPNG::Color.rgb(pixel[0].to_i, pixel[1].to_i, pixel[2].to_i)
       end
@@ -204,8 +203,14 @@ class Image
     
     displayPicture(pathForImage)
     points = parsePoints
-    bez = @picture.bezier_curve(points)
-    pathForSave.nil? ? bez.save(File.join(@picturePath, name)) : bez.save(File.join(pathForSave, name))
+    bez = @picture.bezier_curve(points) unless points.nil?
+    pathForSave.nil? ? bez.save(File.join(@picturePath, name)) : bez.save(File.join(pathForSave, name)) unless bez.nil?
+    if bez.nil? then
+      puts "Unable to draw: no control points generated."
+      return false
+    else
+      return true
+    end
   end
   
   def calculatePixelValueWithFilter3(filter, img, currX, currY, grayscale)
@@ -274,8 +279,8 @@ class Image
         f.close
         File.delete(f)
       end
-    rescue IOError => e
-      puts "There were no points collected."
+    rescue 
+      return nil
     end
     return points
   end

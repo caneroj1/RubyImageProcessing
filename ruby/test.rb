@@ -1,30 +1,34 @@
 require_relative 'Image.rb'
 
 
-picture = Image::new("../pictures/Lenna.png")
+picture = Image.new("../pictures/Lenna.png")
 picture.displayPicture
 puts "Converting to grayscale."
 picture.convertToGrayscale
 puts "Displaying grayscale."
 picture.displayPicture("../pictures/LennaGrayed.png")
-puts "Applying gaussian blur."
+puts "Applying Gaussian blur."
 picture.gaussianBlur
-puts "Displaying guassian blur."
+puts "Displaying Gaussian blur."
 picture.displayPicture("../pictures/LennaGauss.png")
-
-# puts "Applying surveillance filter."
-# picture.surveillanceCamera
-# puts "Displaying surveillance filter."
-# picture.displayPicture("../pictures/Lenna1984.png")
-
-# puts "Applying sharpening filter."
-# picture.sharpen
-# puts "Displaying sharpened."
-# picture.displayPicture("../pictures/LennaSharpened.png")
-# puts "Applying sobel filters."
-# picture.sobelFilter
-# puts "Displaying filtered image."
-# picture.displayPicture("../pictures/LennaSobelFilter.png")
+puts "Applying surveillance filter."
+picture.surveillanceCamera
+puts "Displaying surveillance filter."
+picture.displayPicture("../pictures/Lenna1984.png")
+puts "Applying sharpening filter."
+picture.sharpen
+puts "Displaying sharpened."
+picture.displayPicture("../pictures/LennaSharpened.png")
+puts "Applying sobel filters."
+picture.sobelFilter
+puts "Displaying filtered image."
+picture.displayPicture("../pictures/LennaSobelFilter.png")
+puts "Draw your Bezier curve!"
+res = picture.bezierCurve
+if res then
+  puts "Displaying Bezier curve."
+  picture.displayPicture("../pictures/LennaBezier.png")
+end
 
 
 

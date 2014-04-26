@@ -1,7 +1,8 @@
 nameHash = Hash.new()
-processing = ["Grayed.png", "SobelFilter.png", "Blurred.png", "Gauss.png", "Sharpened.png", "Bezier.png"]
+processing = ["Grayed.png", "SobelFilter.png", "Blurred.png", "Gauss.png", "Sharpened.png", "Bezier.png", "1984.png"]
 
-directory "info"
+directory "data"
+directory "info" => "data"
 file "info/pictures.txt" => "info"
 
 task :create, [:name] => "info/pictures.txt" do |t, args|
