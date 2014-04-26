@@ -155,14 +155,18 @@ class Image
       pathForImage = File.join(@picturePath, @pictureName)
     end
 
-    pi = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679
-
+    pi = Math::PI
+    filter1984 = [
+      [-1*Math.cos(i*pi), -1*Math.cos(i*pi), -1*Math.cos(i*pi)], 
+      [-1*Math.sin(j*pi), -1*Math.sin(j*pi), -1*Math.sin(j*pi)], 
+      [-1*Math.tan((i/j)*pi), -1*Math.tan((i/j)*pi), -1*Math.tan((i/j)*pi)]
+    ]
     height = @height-3
     width = @width-3
     blur = ChunkyPNG::Image.from_file(pathForImage)
     for j in 2..(height)
       for i in 2..(width)
-        pixel = calculatePixelValueWithFilter3([[-1*Math.cos(i*pi), -1*Math.cos(i*pi), -1*Math.cos(i*pi)], [-1*Math.sin(j*pi), -1*Math.sin(j*pi), -1*Math.sin(j*pi)], [-1*Math.tan((i/j)*pi), -1*Math.tan((i/j)*pi), -1*Math.tan((i/j)*pi)]], @picture, i, j, false)
+        pixel = calculatePixelValueWithFilter3(filter1984, @picture, i, j, false)
         # pixel = calculatePixelValueWithFilter3([[-1, -1, -1], [-1, 8, -1], [Math.tan(j/pi), Math.tan(j/pi), Math.tan(j/pi)]], @picture, i, j, false) # curtains filter
         blur[i, j] = ChunkyPNG::Color.rgb(pixel[0].to_i, pixel[1].to_i, pixel[2].to_i)
       end
@@ -243,9 +247,9 @@ class Image
     value = [0, 0, 0]
     for i in 0..4
       for j in 0..4
-        value[0] += filter[i][j] * ChunkyPNG::Color.r(img[(currX-2)+j, (currY-2)+i])
-        value[1] += filter[i][j] * ChunkyPNG::Color.g(img[(currX-2)+j, (currY-2)+i])
-        value[2] += filter[i][j] * ChunkyPNG::Color.b(img[(currX-2)+j, (currY-2)+i])
+        value[0] += filter[i][j] * @colors[(currX-2)+j][(currY-2)+i][0]
+        value[1] += filter[i][j] * @colors[(currX-2)+j][(currY-2)+i][1]
+        value[2] += filter[i][j] * @colors[(currX-2)+j][(currY-2)+i][2]
       end
     end
     return constrainToColors(value)
