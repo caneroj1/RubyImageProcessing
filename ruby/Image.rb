@@ -125,9 +125,45 @@ class Image
     height = @height-3
     width = @width-3
     blur = ChunkyPNG::Image.from_file(pathForImage)
+
+    t1 = Time.now
+    # this section takes approximately 4.2482 seconds. The Lenna image is 220x220 pixels, so:
+    # 220^2 = 48400. 4.2482 / 48400 -> each pixel takes approximately 0.0877 milliseconds to be processed.
+
     for j in 2..(height)
       for i in 2..(width)
-        pixel = calculatePixelValueWithFilter5(blurFilter, @picture, i, j, false)
+        pixel = cpvFilter5Optimize(blurFilter, @picture, i, j, false)
+        blur[i, j] = ChunkyPNG::Color.rgb(pixel[0].to_i, pixel[1].to_i, pixel[2].to_i)
+      end
+    end
+
+    t2 = Time.now
+    "%.9f" % t1.to_f
+    "%.9f" % t2.to_f
+    puts (t2 - t1).to_s + " seconds."
+
+    pathForSave.nil? ? blur.save(File.join(@picturePath, name)) : blur.save(File.join(pathForSave, name))
+  end
+
+  # 1984 filter
+  def surveillanceCamera(name = nil, pathForImage = nil, pathForSave = nil)
+    if name.nil? then
+      name = @pictureName.gsub('.png', '1984.png')
+    end
+    
+    if pathForImage.nil? then
+      pathForImage = File.join(@picturePath, @pictureName)
+    end
+
+    pi = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679
+
+    height = @height-3
+    width = @width-3
+    blur = ChunkyPNG::Image.from_file(pathForImage)
+    for j in 2..(height)
+      for i in 2..(width)
+        pixel = calculatePixelValueWithFilter3([[-1*Math.cos(i*pi), -1*Math.cos(i*pi), -1*Math.cos(i*pi)], [-1*Math.sin(j*pi), -1*Math.sin(j*pi), -1*Math.sin(j*pi)], [-1*Math.tan((i/j)*pi), -1*Math.tan((i/j)*pi), -1*Math.tan((i/j)*pi)]], @picture, i, j, false)
+        # pixel = calculatePixelValueWithFilter3([[-1, -1, -1], [-1, 8, -1], [Math.tan(j/pi), Math.tan(j/pi), Math.tan(j/pi)]], @picture, i, j, false) # curtains filter
         blur[i, j] = ChunkyPNG::Color.rgb(pixel[0].to_i, pixel[1].to_i, pixel[2].to_i)
       end
     end
@@ -184,6 +220,7 @@ class Image
     return constrainToColors(value)
   end
   
+  # this function takes between 0 and 0.001001 seconds
   def calculatePixelValueWithFilter5(filter, img, currX, currY, grayscale)
     value = [0, 0, 0]
     for i in 0..4
@@ -195,6 +232,20 @@ class Image
           value[1] += filter[i][j] * @colors[(currX-2)+j][(currY-2)+i][1]
           value[2] += filter[i][j] * @colors[(currX-2)+j][(currY-2)+i][2]
         end
+      end
+    end
+    return constrainToColors(value)
+  end
+
+  # attempt at optimization of calculatePixelValueWithFilter5
+  # for the time being, let's assume images are never greyscale
+  def cpvFilter5Optimize(filter, img, currX, currY, grayscale)
+    value = [0, 0, 0]
+    for i in 0..4
+      for j in 0..4
+        value[0] += filter[i][j] * ChunkyPNG::Color.r(img[(currX-2)+j, (currY-2)+i])
+        value[1] += filter[i][j] * ChunkyPNG::Color.g(img[(currX-2)+j, (currY-2)+i])
+        value[2] += filter[i][j] * ChunkyPNG::Color.b(img[(currX-2)+j, (currY-2)+i])
       end
     end
     return constrainToColors(value)

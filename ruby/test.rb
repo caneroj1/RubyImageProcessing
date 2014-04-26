@@ -1,16 +1,23 @@
 require_relative 'Image.rb'
 
 
-# picture = Image::new("../pictures/Lenna.png")
-# picture.displayPicture
-# puts "Converting to grayscale."
-# picture.convertToGrayscale
-# puts "Displaying grayscale."
-# picture.displayPicture("../pictures/LennaGrayed.png")
-# puts "Applying gaussian blur."
-# picture.gaussianBlur
-# puts "Displaying guassian blur."
-# picture.displayPicture("../pictures/LennaGauss.png")
+picture = Image::new("../pictures/Lenna.png")
+picture.displayPicture
+puts "Converting to grayscale."
+picture.convertToGrayscale
+puts "Displaying grayscale."
+picture.displayPicture("../pictures/LennaGrayed.png")
+puts "Applying gaussian blur."
+picture.gaussianBlur
+puts "Displaying guassian blur."
+picture.displayPicture("../pictures/LennaGauss.png")
+
+# puts "Applying surveillance filter."
+# picture.surveillanceCamera
+# puts "Displaying surveillance filter."
+# picture.displayPicture("../pictures/Lenna1984.png")
+
+
 # puts "Applying sharpening filter."
 # picture.sharpen
 # puts "Displaying sharpened."
@@ -19,6 +26,8 @@ require_relative 'Image.rb'
 # picture.sobelFilter
 # puts "Displaying filtered image."
 # picture.displayPicture("../pictures/LennaSobelFilter.png")
+
+
 # 
 # 
 # waterfall = Image::new("../pictures/waterfall.png")
