@@ -12,6 +12,18 @@ class Image
       @picture = ChunkyPNG::Image.from_file(path)
       @width = @picture.dimension.width
       @height = @picture.dimension.height
+      
+      pixelArr = @picture.pixels
+      @colors = Array.new(@width) { Array.new(@height) }
+      rowI = colI = 0
+      pixelArr.each do |pixel|
+        @colors[colI][rowI] = [ChunkyPNG::Color.r(pixel), ChunkyPNG::Color.g(pixel), ChunkyPNG::Color.b(pixel)]
+        colI += 1
+        if colI % width == 0 then
+          colI = 0
+          rowI += 1
+        end
+      end
     end
   end
   
@@ -161,11 +173,11 @@ class Image
     for i in 0..2
       for j in 0..2
         if grayscale then
-          value[0] += filter[i][j] * ChunkyPNG::Color.r(img[(currX-1)+j, (currY-1)+i])
+          value[0] += filter[i][j] * @colors[(currX-1)+j][(currY-1)+i][0]
         else
-          value[0] += filter[i][j] * ChunkyPNG::Color.r(img[(currX-1)+j, (currY-1)+i])
-          value[1] += filter[i][j] * ChunkyPNG::Color.g(img[(currX-1)+j, (currY-1)+i])
-          value[2] += filter[i][j] * ChunkyPNG::Color.b(img[(currX-1)+j, (currY-1)+i])
+          value[0] += filter[i][j] * @colors[(currX-1)+j][(currY-1)+i][0]
+          value[1] += filter[i][j] * @colors[(currX-1)+j][(currY-1)+i][1]
+          value[2] += filter[i][j] * @colors[(currX-1)+j][(currY-1)+i][2]
         end
       end
     end
@@ -177,11 +189,11 @@ class Image
     for i in 0..4
       for j in 0..4
         if grayscale then
-          value[0] += filter[i][j] * ChunkyPNG::Color.r(img[(currX-2)+j, (currY-2)+i])
+          value[0] += filter[i][j] * @colors[(currX-2)+j][(currY-2)+i][0]
         else
-          value[0] += filter[i][j] * ChunkyPNG::Color.r(img[(currX-2)+j, (currY-2)+i])
-          value[1] += filter[i][j] * ChunkyPNG::Color.g(img[(currX-2)+j, (currY-2)+i])
-          value[2] += filter[i][j] * ChunkyPNG::Color.b(img[(currX-2)+j, (currY-2)+i])
+          value[0] += filter[i][j] * @colors[(currX-2)+j][(currY-2)+i][0]
+          value[1] += filter[i][j] * @colors[(currX-2)+j][(currY-2)+i][1]
+          value[2] += filter[i][j] * @colors[(currX-2)+j][(currY-2)+i][2]
         end
       end
     end
