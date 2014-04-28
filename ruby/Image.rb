@@ -1,8 +1,25 @@
 require 'chunky_png'
 require_relative 'ImageWindow.rb'
 
+## This file contains all of the functions associated with a RIP Image 
+# The objects made from this class are the basic units of work for RIP
+# there are various functions associated with this class and they fall into two categories
+# image processing functions: includes things like grayscale, sobel filter, etc. these are the real meat of this class
+# utility functions: things like savePicture, displayPicture, constrain to colors, etc. they make the job of each image processing 
+# function easier
+
 class Image 
+  
+  ## declares each of the following symbols as an instance variable and provides Image with accessor functions for each 
   attr_reader :width, :height, :picturePath, :pictureName
+  
+  ## initialize function
+  # currently has an optional path argument but this should be changed in the future
+  # this function creates an organizes the data associated with an image. it parses the path provided and puts the appropriate parts in
+  # the corresponding instance variables. it also extracts data from the image in the form of dimension attributes and pixel information.
+  # the pixel information is used to populate an instance variable array of colors. this is a 3 dimensional array. it is indexed by
+  # [col][row] and contains an array of [r,g,b] values. this matrix makes applying filters significantly faster as it eliminates the need
+  # to query the image each time pixel information is needed
   
   def initialize(path = nil)
     if !path.nil? then
@@ -27,6 +44,10 @@ class Image
     end
   end
   
+  ## display picture
+  # currently accepts an optional path
+  # uses the ImageWindow class to display the image
+  
   def displayPicture(pathForImage = nil)
     if !pathForImage.nil? then
       pict = Image.new(pathForImage)
@@ -38,9 +59,20 @@ class Image
     end
   end
   
+  ## save picture
+  # this function accepts a name parameter and an optional path
+  # saves the image in the default path if none is provided (default is the directory of the currently loaded picture)
+  # otherwise saves the image in the provided path
+  # both variants make use of the passed-in name parameter
+  
   def savePicture(name, path = nil)
     path.nil? ? @picture.save(File.join(@picturePath, name)) : @picture.save(File.join(path, name))
   end
+  
+  ## convert to grayscale
+  # this function converts the current image into its grayscale representation
+  # name and path are optional. if no name, it defaults to substituting in Grayed.png in place of the current .png
+  # if there is no path, it defaults to the directory the current picture is located
   
   def convertToGrayscale(name = nil, path = nil)
     if name.nil? then
@@ -50,10 +82,15 @@ class Image
     path.nil? ? grayImage.save(File.join(@picturePath, name)) : grayImage.save(File.join(path, name))
   end
   
-  def convertToGrayscale!
-    @picture.grayscale!
-    @picture.save(File.join(@picturePath, @pictureName))
-  end
+  ## apply sobel filter
+  # this function has three optional parameters.
+  # name: if omitted, defaults to substituting in SobelFilter.png in place of the current .png
+  # pathForImage: if omitted, it defaults to the current image
+  # pathForSave: if omitted, saves in the current directory
+  # the sobel filter algorithm utilizes two matrices. the first matrix applies the filter along the X-axis and looks for
+  # horizontal and diagonal lines
+  # the second matrix looks along the Y-axis for vertical lines.
+  # the results of each matrix are then put into the distance equation which then becomes that pixel's color
   
   def sobelFilter(name = nil, pathForImage = nil, pathForSave = nil)
     if name.nil? then
@@ -82,6 +119,14 @@ class Image
     pathForSave.nil? ? sobelPic.save(File.join(@picturePath, name)) : sobelPic.save(File.join(pathForSave, name))
   end
   
+  ## apply blur filter
+  # this function has three optional parameters.
+  # name: if omitted, defaults to substituting in Blurred.png in place of the current .png
+  # pathForImage: if omitted, it defaults to the current image
+  # pathForSave: if omitted, saves in the current directory
+  # this function applies a blur filter to the current image. the matrix is not as strong as the Gaussian Blur filter, but it is 
+  # significantly faster. if one does not want an image as blurred as with the gaussian algorithm, this might be desirable.
+  
   def blur(name = nil, pathForImage = nil, pathForSave = nil)
     if name.nil? then
       name = @pictureName.gsub('.png', 'Blurred.png')
@@ -103,6 +148,14 @@ class Image
     end
     pathForSave.nil? ? blur.save(File.join(@picturePath, name)) : blur.save(File.join(pathForSave, name))
   end
+  
+  ## apply gaussian blur filter
+  # this function has three optional parameters.
+  # name: if omitted, defaults to substituting in Gauss.png in place of the current .png
+  # pathForImage: if omitted, it defaults to the current image
+  # pathForSave: if omitted, saves in the current directory
+  # this function makes use of a 5x5 matrix of values obtained from the Gaussian distribution in order to blur the image.
+  # since this is a 5x5 matrix, it is computationally more intense.
   
   def gaussianBlur(name = nil, pathForImage = nil, pathForSave = nil)
     if name.nil? then
@@ -145,7 +198,13 @@ class Image
     pathForSave.nil? ? blur.save(File.join(@picturePath, name)) : blur.save(File.join(pathForSave, name))
   end
 
-  # 1984 filter
+  ## apply 1984 filter
+  # this function has three optional parameters.
+  # name: if omitted, defaults to substituting in 1984.png in place of the current .png
+  # pathForImage: if omitted, it defaults to the current image
+  # pathForSave: if omitted, saves in the current directory
+  # this function makes use of an interesting matrix of trig functions in order to apply a unique filter to the image
+  
   def surveillanceCamera(name = nil, pathForImage = nil, pathForSave = nil)
     if name.nil? then
       name = @pictureName.gsub('.png', '1984.png')
@@ -173,6 +232,13 @@ class Image
     pathForSave.nil? ? blur.save(File.join(@picturePath, name)) : blur.save(File.join(pathForSave, name))
   end
   
+  ## apply sharpen filter
+  # this function has three optional parameters.
+  # name: if omitted, defaults to substituting in Sharpened.png in place of the current .png
+  # pathForImage: if omitted, it defaults to the current image
+  # pathForSave: if omitted, saves in the current directory
+  # this function sharpens an image in order to highlight differences between edges
+  
   def sharpen(name = nil, pathForImage = nil, pathForSave = nil)
     if name.nil? then
       name = @pictureName.gsub('.png', 'Sharpened.png')
@@ -196,6 +262,14 @@ class Image
     pathForSave.nil? ? sharpen.save(File.join(@picturePath, name)) : sharpen.save(File.join(pathForSave, name))
   end
   
+  ## draw bezier curve
+  # this function has three optional parameters.
+  # name: if omitted, defaults to substituting in Bezier.png in place of the current .png
+  # pathForImage: if omitted, it defaults to the current image
+  # pathForSave: if omitted, saves in the current directory
+  # this function brings up a display of the currently loaded image
+  # the user is allowed to click on points in the image which are then used as the control points for the bezier curve
+  
   def bezierCurve(name = nil, pathForImage = nil, pathForSave = nil)
     if name.nil? then
       name = @pictureName.gsub('.png', 'Bezier.png')
@@ -213,6 +287,13 @@ class Image
     end
   end
   
+  ## CPVF3
+  # this function is not a typical matrix multiplication operation
+  # it applies the mathematical convolution operation to the image
+  # it accepts a parameter of the filter of to be applied, the current image, the current coordinates and a grayscale indicator
+  # the grayscale indicator is a bool indicating whether to just calculate a single color value
+  # i'm pretty sure we can take out the img parameter
+  
   def calculatePixelValueWithFilter3(filter, img, currX, currY, grayscale)
     value = [0, 0, 0]
     for i in 0..2
@@ -228,6 +309,13 @@ class Image
     end
     return constrainToColors(value)
   end
+  
+  ## CPVF5
+  # this function is not a typical matrix multiplication operation
+  # it applies the mathematical convolution operation to the image
+  # it accepts a parameter of the filter of to be applied, the current image, the current coordinates and a grayscale indicator
+  # the grayscale indicator is a bool indicating whether to just calculate a single color value
+  # i'm pretty sure we can take out the img parameter
   
   # this function takes between 0 and 0.001001 seconds
   def calculatePixelValueWithFilter5(filter, img, currX, currY, grayscale)
@@ -260,7 +348,15 @@ class Image
     return constrainToColors(value)
   end
   
+  ## PRIVATE UTILITY FUNCTIONS
+  
   private
+  
+  ## constrain function
+  # this function accepts an array of [r,g,b] values and constrains them to allowable pixel values
+  # if the value is over 255, it is set to 255
+  # if the value is less than 0, it is set to 0
+  # else, it is unchanged
   def constrainToColors(array)
     array[0] > 255 ? array[0] = 255 : array[0] < 0 ? array[0] = 0 : array[0]
     array[1] > 255 ? array[1] = 255 : array[1] < 0 ? array[1] = 0 : array[1]
@@ -268,6 +364,10 @@ class Image
     return array
   end
   
+  ## point parser
+  # this function reads control point information from the data file
+  # it uses the x- and y-coordinates of each control point to instantiate a Point object
+  # the point object is pushed to an array called points that is the return value of this function under correct conditions
   def parsePoints
     points = Array.new
     begin

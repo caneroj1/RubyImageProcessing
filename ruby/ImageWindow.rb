@@ -1,7 +1,14 @@
 require 'gosu'
 
+## Image Window class. This class uses the gosu graphics library to display the images associated with RIP
+
 class ImageWindow < Gosu::Window
   attr_reader :width, :height
+  
+  ## initializes the display window
+  # accepts a parameter that is a RIP image
+  # extracts dimension data from the image as well as path information
+  # that information is used to create a gosu window with the image as its background
   
   def initialize(picture)
     @width = picture.width
@@ -22,6 +29,10 @@ class ImageWindow < Gosu::Window
     @background_image.draw(0,0,0)
   end
   
+  ## this function monitors keyboard and mouse input
+  # if the escape or enter key is pressed, the window closes
+  # if a user clicks inside the image, the location of that pixel is stored in the points array
+  # when the user exits and there are points in the array, the coordinate data is written to the data_points file to be used by Image.rb
   def key_pressed
     if button_down? Gosu::KbEscape or button_down? Gosu::KbReturn then
       if !@points.empty? then
