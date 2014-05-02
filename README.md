@@ -66,6 +66,8 @@ We have a nice assortment of image processing functions currently. From blurring
 | Sharpen | `picture.sharpen` | Applies a filter to sharpen the image in order to highlight color changes |
 | Bezier Curve | `picture.bezierCurve` | Allows the user to draw a bezier curve on the current picture by specifying control points |
 | 1984 filter | `picture.surveillanceCamera` | Big Brother is watching you. |
+| Invert | `picture.invert` | Takes the complement of the image's RGB values |
+| Emboss | `picture.emboss` | Embosses the image to give a raised effect |
 
 <hr>
 <h3>What are we working on?</h3>
@@ -74,6 +76,7 @@ We have a nice assortment of image processing functions currently. From blurring
 <li>Convert all functions to accept hashes for the parameters</li>
 <li>Try and get bezier curve drawing to happen in real time</li>
 <li>Implement more filters</li>
+<li>Remove the border that shows up on the edge of images that have been filtered.</li>
 </ul>
 <hr>
 <h3>The team!</h3>
