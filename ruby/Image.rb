@@ -90,16 +90,16 @@ class Image
   # the second matrix looks along the Y-axis for vertical lines.
   # the results of each matrix are then put into the distance equation which then becomes that pixel's color
   
-  def sobelFilter(name = nil, pathForImage = nil, pathForSave = nil)
-    name ||= @pictureName.gsub('.png', 'SobelFilter.png')
-    pathForImage ||= File.join(@picturePath, @pictureName.gsub('.png', 'Grayed.png'))
+  def sobelFilter(h = {})
+    h[:name] ||= @pictureName.gsub('.png', 'SobelFilter.png')
+    h[:pathForImage] ||= File.join(@picturePath, @pictureName)
     
     sobelFilterX = [[1, 2, 1], [0, 0, 0], [-1, -2, -1]]
     sobelFilterY = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]]
     height = @height-2
     width = @width-2
-    copyImage = ChunkyPNG::Image.from_file(pathForImage)
-    sobelPic = ChunkyPNG::Image.from_file(pathForImage)
+    copyImage = ChunkyPNG::Image.from_file(h[:pathForImage])
+    sobelPic = ChunkyPNG::Image.from_file(h[:pathForImage])
     
     for j in 1..(height)
       for i in 1..(width)
@@ -109,7 +109,7 @@ class Image
         sobelPic[i, j] = ChunkyPNG::Color.rgb(res.to_i, res.to_i, res.to_i)
       end
     end
-    pathForSave.nil? ? sobelPic.save(File.join(@picturePath, name)) : sobelPic.save(File.join(pathForSave, name))
+    h[:pathForSave].nil? ? sobelPic.save(File.join(@picturePath, h[:name])) : sobelPic.save(File.join(h[:pathForSave], h[:name]))
   end
   
   ## apply blur filter

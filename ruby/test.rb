@@ -1,16 +1,16 @@
 require_relative 'Image.rb'
 
 
-picture = Image.new("../pictures/Lenna.png")
-picture.displayPicture
-puts "Inverting colors"
-picture.invert
-puts "Displaying inversion"
-picture.displayPicture("../Pictures/LennaInverted.png")
-puts "Embossing image"
-picture.emboss
-puts "Displaying embossed"
-picture.displayPicture("../Pictures/LennaEmbossed.png")
+# picture = Image.new("../pictures/Lenna.png")
+# picture.displayPicture
+# puts "Inverting colors"
+# picture.invert
+# puts "Displaying inversion"
+# picture.displayPicture("../Pictures/LennaInverted.png")
+# puts "Embossing image"
+# picture.emboss
+# puts "Displaying embossed"
+# picture.displayPicture("../Pictures/LennaEmbossed.png")
 # puts "Converting to grayscale."
 # picture.convertToGrayscale
 # puts "Displaying grayscale."
