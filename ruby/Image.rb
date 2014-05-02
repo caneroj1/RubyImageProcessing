@@ -288,20 +288,24 @@ class Image
   # pathForSave: if omitted, saves in the current directory
   # this function averages the colors of each pixel in order to convert it grayscale and emboss
   
-  def emboss(name = nil, pathForImage = nil, pathForSave = nil)
+  def emboss(name = nil, pathForImage = nil, pathForSave = nil, rgb = nil)
     name ||= @pictureName.gsub('.png', 'Embossed.png')
     pathForImage ||= File.join(@picturePath, @pictureName)
     
     embossFilter = [[-1, -1, 1], [-1, -1, 1], [1, 1, 1]]
-    
+
     height = @height-2
     width = @width-2
     emboss = ChunkyPNG::Image.from_file(pathForImage)
     for j in 1..(height)
       for i in 1..(width)
         pixel = calculatePixelValueWithFilter3(embossFilter, @picture, i, j, false)
-        val = (pixel[0] + pixel[1] + pixel[2])/3
-        emboss[i, j] = ChunkyPNG::Color.rgb(val, val, val)
+        if rgb then 
+          emboss[i, j] = ChunkyPNG::Color.rgb(pixel[0], pixel[1], pixel[2])
+        else
+          val = (pixel[0] + pixel[1] + pixel[2])/3 
+          emboss[i, j] = ChunkyPNG::Color.rgb(val, val, val)
+        end
       end
     end
     
