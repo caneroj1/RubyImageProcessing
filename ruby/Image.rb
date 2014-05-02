@@ -257,6 +257,57 @@ class Image
     end
   end
   
+  ## invert colors
+  # this function has three optional parameters.
+  # name: if omitted, defaults to substituting in Bezier.png in place of the current .png
+  # pathForImage: if omitted, it defaults to the current image
+  # pathForSave: if omitted, saves in the current directory
+  # this function inverts the colors of the image
+  
+  def invert(name = nil, pathForImage = nil, pathForSave = nil)
+    name ||= @pictureName.gsub('.png', 'Inverted.png')
+    pathForImage ||= File.join(@picturePath, @pictureName)
+    
+    img = ChunkyPNG::Image.from_file(pathForImage)
+    for i in (0...img.dimension.width)
+      for j in (0...img.dimension.height)
+        red = 255 - ChunkyPNG::Color.r(img[i,j])
+        blue = 255 - ChunkyPNG::Color.g(img[i,j])
+        green = 255 - ChunkyPNG::Color.b(img[i,j])
+        img[i,j] = ChunkyPNG::Color.rgb(red, blue, green)
+      end
+    end
+    
+    pathForSave.nil? ? img.save(File.join(@picturePath, name)) : img.save(File.join(pathForSave, name))
+  end
+  
+  ## emboss
+  # this function has three optional parameters.
+  # name: if omitted, defaults to substituting in Bezier.png in place of the current .png
+  # pathForImage: if omitted, it defaults to the current image
+  # pathForSave: if omitted, saves in the current directory
+  # this function averages the colors of each pixel in order to convert it grayscale and emboss
+  
+  def emboss(name = nil, pathForImage = nil, pathForSave = nil)
+    name ||= @pictureName.gsub('.png', 'Embossed.png')
+    pathForImage ||= File.join(@picturePath, @pictureName)
+    
+    embossFilter = [[-1, -1, 1], [-1, -1, 1], [1, 1, 1]]
+    
+    height = @height-2
+    width = @width-2
+    emboss = ChunkyPNG::Image.from_file(pathForImage)
+    for j in 1..(height)
+      for i in 1..(width)
+        pixel = calculatePixelValueWithFilter3(embossFilter, @picture, i, j, false)
+        val = (pixel[0] + pixel[1] + pixel[2])/3
+        emboss[i, j] = ChunkyPNG::Color.rgb(val, val, val)
+      end
+    end
+    
+    pathForSave.nil? ? emboss.save(File.join(@picturePath, name)) : emboss.save(File.join(pathForSave, name))
+  end
+  
   ## CPVF3
   # this function is not a typical matrix multiplication operation
   # it applies the mathematical convolution operation to the image

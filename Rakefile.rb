@@ -1,5 +1,6 @@
-nameHash = Hash.new()
-processing = ["Grayed.png", "SobelFilter.png", "Blurred.png", "Gauss.png", "Sharpened.png", "Bezier.png", "1984.png"]
+nameHash   = Hash.new()
+processing = ["Grayed.png", "SobelFilter.png", "Blurred.png", 
+  "Gauss.png", "Sharpened.png", "Bezier.png", "1984.png", "Inverted.png", "Embossed.png"]
 
 directory "data"
 directory "info" => "data"
