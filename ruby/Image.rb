@@ -358,20 +358,6 @@ class Image
     end
     return constrainToColors(value)
   end
-
-  # attempt at optimization of calculatePixelValueWithFilter5
-  # for the time being, let's assume images are never greyscale
-  def cpvFilter5Optimize(filter, img, currX, currY, grayscale)
-    value = [0, 0, 0]
-    for i in 0..4
-      for j in 0..4
-        value[0] += filter[i][j] * @colors[(currX-2)+j][(currY-2)+i][0]
-        value[1] += filter[i][j] * @colors[(currX-2)+j][(currY-2)+i][1]
-        value[2] += filter[i][j] * @colors[(currX-2)+j][(currY-2)+i][2]
-      end
-    end
-    return constrainToColors(value)
-  end
   
   ## PRIVATE UTILITY FUNCTIONS
   private
