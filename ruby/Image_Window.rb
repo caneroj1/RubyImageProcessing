@@ -9,7 +9,6 @@ class ImageWindow < Gosu::Window
   # accepts a parameter that is a RIP image
   # extracts dimension data from the image as well as path information
   # that information is used to create a gosu window with the image as its background
-  
   def initialize(picture)
     @width = picture.width
     @height = picture.height
@@ -35,16 +34,14 @@ class ImageWindow < Gosu::Window
   # when the user exits and there are points in the array, the coordinate data is written to the data_points file to be used by Image.rb
   def key_pressed
     if button_down? Gosu::KbEscape or button_down? Gosu::KbReturn then
-      if !@points.empty? then
+      if !@points.empty? 
         points = File.open("../data/data_points.txt", "w") do |f|
-          @points.each do |i|
-            f.write("#{i[0]},#{i[1]}\n")
-          end
+          @points.each { |i| f.write("#{i[0]},#{i[1]}\n") }
         end
       end
       close
     end
-    if button_down? Gosu::MsLeft then
+    if button_down? Gosu::MsLeft
       @points.push([mouse_x, mouse_y])
       sleep(0.2)
     end
