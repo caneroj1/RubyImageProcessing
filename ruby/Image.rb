@@ -88,11 +88,19 @@ class Image
   # obviously combines the two steps
   def save_and_display(params = {})
     save(name: params[:name], save: params[:save])
-    if params[:name].nil? 
-      display
-    else
-      display(pathForImage: File.join(params[:save] ||= @picturePath, params[:name])) if params[:name].nil? 
+    
+    path =
+    if params[:save].nil? && params[:name].nil?
+      nil
+    elsif params[:save].nil? && !params[:name].nil?
+      File.join(@picturePath, params[:name])
+    elsif !params[:save].nil? && params[:name].nil?
+      File.join(params[:save], @pictureName)
+    elsif !params[:save].nil? && !params[:name].nil?
+      File.join(params[:save], params[:name])
     end
+    
+    display(pathForImage: path)
   end
   
   ## convert to grayscale
@@ -281,7 +289,7 @@ class Image
   # pathForSave: if omitted, saves in the current directory
   # this function brings up a display of the currently loaded image
   # the user is allowed to click on points in the image which are then used as the control points for the bezier curve
-  def bezier_curve(h = {})
+  def bezier_curve(params = {})
     params[:name] ||= @pictureName.gsub('.png', 'Bezier.png')
     params[:save] ||= @picturePath
     
