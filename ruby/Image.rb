@@ -1,4 +1,6 @@
 require 'chunky_png'
+require 'haml'
+
 require_relative 'Image_Window.rb'
 
 ## This file contains all of the functions associated with a RIP Image 
@@ -374,6 +376,33 @@ class Image
     emboss
   end
   
+  ## histogram function
+  # this calculates the image histogram of the brightness of the image
+  # each pixel's brightness is defined as sqrt(.241 R^2 + .691 G^2 + .068 B^2)
+  # since the max value for each color is 255, the max possible value the above function could return is 323.8, which will round to 324
+  # i think 26 bins is appropriate for this histogram, so each value will be binned appropriately into a hash
+  def histogram(params = {})
+    params[:name] ||= File.join(@pictureName.gsub(".png", "Histogram.html"))
+    bins = Hash.new(0)
+    
+    (0...@picture.height).each do |j|
+      (0...@picture.width).each do |i|
+        r = ChunkyPNG::Color.r(@picture[i,j])
+        g = ChunkyPNG::Color.g(@picture[i,j])
+        b = ChunkyPNG::Color.b(@picture[i,j])
+        
+        op = 0.241 * r**2 + 0.691 * g**2 + 0.68 * b**2
+        val = Math.sqrt(op).round
+        val /= 13
+        
+        bins[val] += 1
+      end
+    end
+    
+    bins = Hash[bins.map {|k,v| [k*13, v]}.sort]
+    graph(bins, params[:name])
+  end
+  
   ## CPVF3
   # this function is not a typical matrix multiplication operation
   # it applies the mathematical convolution operation to the image
@@ -452,6 +481,19 @@ class Image
       return nil
     end
     return points
+  end
+  
+  ## create histogram
+  # this will accept a hash and will embed the data in a brief javascript/html file in order
+  # to display the histogram
+  def graph(hash, name)
+    Haml::Engine.new(File.read("../templates/hist.haml")).def_method(hash, :render, :title)
+    begin
+      hist = File.open("#{name}", 'w')
+      hist.write(hash.render(:title => name))
+    rescue IOError => e
+      puts e
+    end
   end
   
 end

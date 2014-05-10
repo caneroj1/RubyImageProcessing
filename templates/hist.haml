@@ -1,0 +1,29 @@
+!!! 5
+%html
+	%head
+		%script(src = "ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js")
+		%script(src = "Chart.js")
+	%body
+		%h1= title
+		%canvas(id ="bar" data-type ="Bar" width="1200" height ="400")
+		#makeChart
+			:javascript
+				var ctx = document.getElementById("bar").getContext("2d");  
+				var data = {  
+				  labels : #{self.keys.to_s},  
+				  datasets : [  
+				    {  
+				      fillColor : "rgba(120,120,170,0.5)",  
+				      strokeColor : "rgba(120,120,170,1)",  
+				      pointColor : "rgba(120,120,170,1)",  
+				      pointStrokeColor : "#fff",  
+				      data : #{self.values.to_s}  
+				    }  
+				  ]  
+				}  
+				var options = {
+					barValueSpacing : 1,
+					scaleGridLineColor : "rgba(0,0,125,.05)",
+					scaleLineWidth : 2,
+				}
+				var myNewChart = new Chart(ctx).Bar(data, options);
