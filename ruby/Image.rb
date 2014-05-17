@@ -13,7 +13,7 @@ require_relative 'Image_Window.rb'
 class Image 
   
   protected
-  attr_writer :pictureName, :picturePath
+  attr_writer :pictureName, :picturePath, :width, :height
   attr_accessor :picture
 
   public
@@ -50,7 +50,6 @@ class Image
   def dup
     Image.new(File.join(@picturePath, @pictureName))
   end
-  
   
   ## access pixels
   def[](a, b)
@@ -399,8 +398,111 @@ class Image
       end
     end
     
-    bins = Hash[bins.map {|k,v| [k*13, v]}.sort]
+    bins = Hash[ bins.map { |k,v| [k * 13, v] }.sort ]
     graph(bins, params[:name])
+  end
+  
+  ## mirror function
+  # this function will take the image and create a new canvas that is twice as wide and will mirror the image. this will result in
+  # both the original image and the mirrored version being present on the canvas. i.e., it is not just a flip operation
+  def mirror(params = {})
+    params[:name] ||= @pictureName.gsub('.png', 'Mirrored.png')
+    params[:save] ||= @picturePath
+    
+    mir = dup
+    
+    mirror_width = @width * 2
+    mir.picture = ChunkyPNG::Image.new(mirror_width, @height)
+    mir.height = @height
+    mir.width = mirror_width
+    
+    mirror_width -= 1
+    
+    (0...@width).each do |i|
+      (0...@height).each do |j|
+        mir[i, j]                = @picture[i, j]
+        mir[mirror_width - i, j] = @picture[i, j]
+      end
+    end
+    
+    mir.pictureName, mir.picturePath = params[:name], params[:save]
+    mir 
+  end 
+  
+  ## flip vertically (in place)
+  # this function will flip the image vertically. it does this in place and will alter the original image
+  def flip_vertically!
+    @picture.flip_vertically!
+  end
+  
+  ## flip vertically
+  # this will flip the image in terms of the in place function, but will return a copy of the flipped image instead of changing the original
+  def flip_vertically(params = {})
+    params[:name] ||= @pictureName.gsub('.png', 'FlippedV.png')
+    params[:save] ||= @picturePath
+    
+    flip_v = dup
+    flip_v.flip_vertically!
+    
+    flip_v.pictureName, picturePath = params[:name], params[:save]
+    flip_v
+  end
+  
+  ## flip horizontally (in place)
+  # this function will flip the image horizontally. it does this in place and will alter the original image
+  def flip_horizontally!
+    @picture.flip_horizontally!
+  end
+  
+  ## flip horizontally
+  # this will flip the image in terms of the in place function, but will return a copy of the flipped image instead of changing the original
+  def flip_horizontally(params = {})
+    params[:name] ||= @pictureName.gsub('.png', 'FlippedH.png')
+    params[:save] ||= @picturePath
+    
+    flip_h = dup
+    flip_h.flip_horizontally!
+    
+    flip_h.pictureName, picturePath = params[:name], params[:save]
+    flip_h
+  end
+  
+  ## rotate left (in place)
+  def rotate_left!
+    @picture.rotate_left!
+  end
+  
+  ## rotate left
+  def rotate_left(params = {})
+    params[:name] ||= @pictureName.gsub('.png', 'RotateL.png')
+    params[:save] ||= @picturePath
+    
+    rot_l = dup
+    rot_l.rotate_left!
+    
+    rot_l.width, rot_l.height = rot_l.height, rot_l.width
+    
+    rot_l.pictureName, picturePath = params[:name], params[:save]
+    rot_l
+  end
+  
+  ## rotate right (in place)
+  def rotate_right!
+    @picture.rotate_right!
+  end
+  
+  ## rotate right
+  def rotate_right(params = {})
+    params[:name] ||= @pictureName.gsub('.png', 'RotateR.png')
+    params[:save] ||= @picturePath
+    
+    rot_r = dup
+    rot_r.rotate_right!
+    
+    rot_r.width, rot_r.height = rot_r.height, rot_r.width
+    
+    rot_r.pictureName, picturePath = params[:name], params[:save]
+    rot_r
   end
   
   ## CPVF3

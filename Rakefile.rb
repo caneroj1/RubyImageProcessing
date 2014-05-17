@@ -1,6 +1,7 @@
 nameHash   = Hash.new()
 processing = ["Grayed.png", "SobelFilter.png", "Blurred.png", 
-  "Gauss.png", "Sharpened.png", "Bezier.png", "1984.png", "Inverted.png", "Embossed.png"]
+  "Gauss.png", "Sharpened.png", "Bezier.png", "1984.png", "Inverted.png", "Embossed.png", "Mirrored.png", "RotateL.png", "RotateR.png",
+  "FlippedH.png", "FlippedV.png"]
 
 directory "data"
 directory "info" => "data"

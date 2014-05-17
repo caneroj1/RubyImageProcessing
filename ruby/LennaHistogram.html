@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src='ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js'></script>
+    <script src='Chart.js'></script>
+  </head>
+  <body>
+    <h1>LennaHistogram.html</h1>
+    <canvas data-type='Bar' height='400' id='bar' width='1200'></canvas>
+    <div id='makeChart'>
+      <script>
+        var ctx = document.getElementById("bar").getContext("2d");  
+        var data = {  
+          labels : [39, 52, 65, 78, 91, 104, 117, 130, 143, 156, 169, 182, 195, 208, 221, 234, 247, 260, 273, 286],  
+          datasets : [  
+            {  
+              fillColor : "rgba(120,120,170,0.5)",  
+              strokeColor : "rgba(120,120,170,1)",  
+              pointColor : "rgba(120,120,170,1)",  
+              pointStrokeColor : "#fff",  
+              data : [11, 710, 4520, 2796, 2226, 2691, 4267, 3237, 4789, 4630, 5360, 4236, 2361, 1382, 1430, 1822, 1472, 370, 85, 5]  
+            }  
+          ]  
+        }  
+        var options = {
+        	barValueSpacing : 1,
+        	scaleGridLineColor : "rgba(0,0,125,.05)",
+        	scaleLineWidth : 2,
+        }
+        var myNewChart = new Chart(ctx).Bar(data, options);
+      </script>
+    </div>
+  </body>
+</html>
